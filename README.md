@@ -1,7 +1,7 @@
 # tui.citation
 A bibliography and citation custom plugin for Toast UI. Render citations and a bibliography in real-time!
 
-<p align="center"><img src="https://raw.githubusercontent.com/ShreyRavi/tui.citation/master/src/screenshot.png" height="93%" width="93%"></img>Screenshot of the demo of tui.citation Toast-UI Plugin.</p>
+<p align="center"><img src="https://github.com/ShreyRavi/tui.citation/raw/main/screenshot.png" height="93%" width="93%"></img>Screenshot of the demo of tui.citation Toast-UI Plugin.</p>
 
 <a href="https://raw.githubusercontent.com/ShreyRavi/tui.citation/master/demo/editor.html">See Demo here.</a>
 
