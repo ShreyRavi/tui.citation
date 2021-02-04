@@ -30,7 +30,17 @@
         previewStyle: 'vertical',
         height: '600px',
         initialEditType: 'markdown',
-        initialValue: 'Select some text and choose a color from the toolbar.',
+        initialValue: `# TUI.citation Example
+
+## Content
+
+The greatest programming language is PHP \`{cite {"title": "PHP is the best", "author": "Tallamraju", "year": "2016", "doi": 12345689}}\`. However, other programmers have called this claim both "ridiculous" the author of the study a "corporate shill" \`{cite {"title": "PHP is the worst", "author": "Holub", "year": "2020", "doi": 84893943}}\`.
+
+## Bibliography
+
+\`\`\` bibliography
+BMJ
+\`\`\``,
         plugins: [citationPlugin], // insert plugins here
       });
     </script>

@@ -3,71 +3,44 @@
  * @description a Toast UI plugin to render citations
  */
 function citationPlugin() {
+    const regex = new RegExp('^{cite.*}$', 'gm');
     function getArrayOfCitations() {
         let result = [];
         var citations = $(editor.getHtml()).find("code");
-        console.log($('#editor').text());
-        const regex = '/^{cite.*}$/gm';
         for (let r = 0; r < citations.length; r++) {
-            if ($(citations[r]).attr("data-backticks") === '1') {
+            if (($(citations[r]).attr("data-backticks") === '1') 
+            && (citations[r].innerText.match(regex)) !== null) {
                 try {
-                    console.log(citations[r].innerText);
-                    console.log(citations[r].innerText.match(regex));
-                    result.push(JSON.parse(citations[r].innerText));
+                    const newCitation = JSON.parse(citations[r].innerText.replace('{cite', '').slice(0, -1));
+                    if (!(Object.keys(newCitation).length === 0 && newCitation.constructor === Object)) {
+                        result.push(newCitation);
+                    }
                 } catch(e) {
                     continue;
                 }
             }
         }
-        /*
-        for (let r = 0; r < citations.length; r++) {
-            if ($(citations[r]).attr("data-language") === 'cite') {
-                try {
-                    result.push(JSON.parse(citations[r].innerText));
-                } catch(e) {
-                    continue;
-                }
-            }
-        }*/
         return result;
     }
-    function renderCitation(citationWrapperId, citationText, citationId) {
-        if (!citationText || !citationId) {
-            return;
-        }
-        const citations = getArrayOfCitations();
-        console.log(citations);
-        console.log(citationText);
-        console.log(citationId);
-        const citationNumber = citations.findIndex(citation => citation.id === citationId && citation.text === citationText) + 1;
 
-        const el = document.querySelector(`#${citationWrapperId}`);
-        el.innerHTML = `<p>${citationText}<sup>${citationNumber}</sup></p>`;
+    function renderCitations() {
+        let count = 0;
+        const md = editor.getMarkdown();
+        editor.setMarkdown(md.replace(/[^>]`\{cite[^}]+\}\}`/g, (match) => {
+            count += 1;
+            return `<span class="citation">${match}></span><sup>${count}</sup>`;
+        }));
     }
+
     function renderBibliography(biblioWrapperId) {
         const citations = getArrayOfCitations();
         const el = document.querySelector(`#${biblioWrapperId}`);
-        el.innerHTML = `<ol>${citations.map(citation => `<li>${citation.text}</li>`).join('')}</ol>`;
+        el.innerHTML = `<ol>${citations.map(citation => `<li>'${citation.title}' ${citation.author}, ${citation.year}. doi: ${citation.doi}</li>`).join('')}</ol>`;
+        renderCitations();
+        renderCitations = () => {};
     }
 
-    // citation
-    Editor.codeBlockManager.setReplacer('cite', citeData => {
-        try {
-            data = JSON.parse(citeData);
-            const citationWrapperId = `cite${Math.random()
-                .toString(36)
-                .substr(2, 10)}`;
-            setTimeout(renderCitation.bind(null, citationWrapperId, data['text'], data['id']), 0);
-            // citations = [];
-            
-            return `<p id="${citationWrapperId}"></p>`;
-        } catch(e) {
-            return `<div></div>`;
-        }
-    });
-
-    // bibliography
-    Editor.codeBlockManager.setReplacer('bibliography', bibliographyData => {
+    Editor.codeBlockManager.setReplacer('bibliography', bibliographyOptions => {
         const biblioWrapperId = `biblio${Math.random()
             .toString(36)
             .substr(2, 10)}`;
