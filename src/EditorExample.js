@@ -73,7 +73,7 @@ const EditorExample = ({citations}) => {
 
       <Editor
           previewStyle="vertical"
-          height="400px"
+          height="600px"
           initialEditType="markdown"
           initialValue=""
           plugins={[() => tuiCitationPlugin({citations, insertedCitations})]}
