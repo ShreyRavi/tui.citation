@@ -40,14 +40,20 @@ const EditorExample = ({citations}) => {
     } catch (error) {
       // already loaded event
     }
+  }, []);
+  useEffect(() => {
+    const editor = editorRef.current?.getInstance();
+    const eventManager = editor.eventManager;
     eventManager.listen('insertCitation', function () {
         setShowCiteModal(true);
-        editor.insertText(`<sup>${insertedCitations.length + 1}</sup>`);
     });
     eventManager.listen('insertBibliography', function () {
+      const insertBibliography = () => {
         editor.moveCursorToEnd();
-        editor.insertText("\n```bibliography\n```");
+        editor.insertText(`\n\`\`\`bibliography\n${insertedCitations.toString()}\`\`\``);
         editor.moveCursorToStart();
+      }
+      insertBibliography();
     });
   }, []);
   return (
@@ -56,7 +62,8 @@ const EditorExample = ({citations}) => {
       <Typography variant="body2">v1.1.0</Typography>
       <Divider className={classes.divider} />
 
-      <CiteModal 
+      <CiteModal
+        editorRef={editorRef}
         open={showCiteModal}
         handleClose={() => setShowCiteModal(false)}
         citations={citations}

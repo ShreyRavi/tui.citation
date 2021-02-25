@@ -39,7 +39,7 @@ const useStyles = makeStyles({
     }
   });
 
-const CiteModal = ({open, handleClose, citations, insertedCitations, setInsertedCitations}) => {
+const CiteModal = ({editorRef, open, handleClose, citations, insertedCitations, setInsertedCitations}) => {
     const classes = useStyles();
     const [selectedCitationId, setSelectedCitationId] = useState('');
     const handleSelectCitation = (e) => {
@@ -49,6 +49,8 @@ const CiteModal = ({open, handleClose, citations, insertedCitations, setInserted
         if (selectedCitationId !== '') {
             setInsertedCitations([...insertedCitations, selectedCitationId]);
         }
+        const editor = editorRef.current?.getInstance();
+        editor.insertText(`<sup>${insertedCitations.length + 1}</sup>`);
         setSelectedCitationId('');
         handleClose();
     };
