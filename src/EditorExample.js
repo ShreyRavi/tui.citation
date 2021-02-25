@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
@@ -12,6 +12,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
+
+import tuiCitationPlugin from './tuiCitation';
 
 const useStyles = makeStyles({
   root: {
@@ -32,10 +34,19 @@ const useStyles = makeStyles({
 
 const EditorExample = ({citations}) => {
   const classes = useStyles();
+  const editorRef = React.createRef();
+  useEffect(() => {
+    const editor = editorRef.current?.getInstance();
+    const eventManager = editor.eventManager;
+    eventManager.addEventType('insertCitation');
+    eventManager.listen('insertCitation', function () {
+        console.log("insert citation called");
+      });
+  });
   return (
     <div className={classes.root}>
       <Typography variant="h1">ToastUI Editor Example</Typography>
-
+      <Typography variant="body2">v1.1.0</Typography>
       <Divider className={classes.divider} />
 
       <Typography variant="h5">Citations Given</Typography>
@@ -51,9 +62,9 @@ const EditorExample = ({citations}) => {
           </TableHead>
           <TableBody>
             {citations.map((row) => (
-              <TableRow key={row.name}>
+              <TableRow key={row.author}>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {row.author}
                 </TableCell>
                 <TableCell align="right">{row.year}</TableCell>
                 <TableCell align="right">{row.id}</TableCell>
@@ -68,8 +79,38 @@ const EditorExample = ({citations}) => {
       <Editor
           previewStyle="vertical"
           height="400px"
-          initialEditType="wysiwyg"
+          initialEditType="markdown"
           initialValue=""
+          plugins={[tuiCitationPlugin]}
+          ref={editorRef}
+          toolbarItems={[
+            'heading',
+            'bold',
+            'italic',
+            'strike',
+            'divider',
+            'hr',
+            'quote',
+            'divider',
+            'ul',
+            'ol',
+            'task',
+            'divider',
+            'table',
+            'image',
+            'link',
+            'divider',
+            'code',
+            'codeblock',
+            {
+                type: 'button',
+                options: {
+                    event: 'insertCitation',
+                    tooltip: 'Insert Citation',
+                    text: 'CITE'
+                }
+            }
+        ]}
           usageStatistics={false}
         />
     </div>
