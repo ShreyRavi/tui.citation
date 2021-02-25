@@ -41,8 +41,12 @@ const EditorExample = ({citations}) => {
     eventManager.addEventType('insertCitation');
     eventManager.listen('insertCitation', function () {
         console.log("insert citation called");
-      });
-  });
+    });
+    eventManager.addEventType('insertBibliography');
+    eventManager.listen('insertBibliography', function () {
+        console.log("insert bibliography called");
+    });
+  }, []);
   return (
     <div className={classes.root}>
       <Typography variant="h1">ToastUI Editor Example</Typography>
@@ -102,14 +106,25 @@ const EditorExample = ({citations}) => {
             'divider',
             'code',
             'codeblock',
+            'divider',
             {
                 type: 'button',
                 options: {
                     event: 'insertCitation',
                     tooltip: 'Insert Citation',
-                    text: 'CITE'
+                    text: 'C',
+                    style: 'color: black; border-color: black; background-color: white;'
                 }
-            }
+            },
+            {
+              type: 'button',
+              options: {
+                  event: 'insertBibliography',
+                  tooltip: 'Insert Bibliography',
+                  text: 'B',
+                  style: 'color: black; border-color: black; background-color: white;'
+              }
+          }
         ]}
           usageStatistics={false}
         />
