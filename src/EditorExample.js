@@ -4,15 +4,9 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 
+import CiteModal from './CiteModal';
 import tuiCitationPlugin from './tuiCitation';
 
 const useStyles = makeStyles({
@@ -33,18 +27,27 @@ const useStyles = makeStyles({
 });
 
 const EditorExample = ({citations}) => {
+  const [insertedCitations, setInsertedCitations] = useState([]);
+  const [showCiteModal, setShowCiteModal] = useState(false);
   const classes = useStyles();
   const editorRef = React.createRef();
   useEffect(() => {
     const editor = editorRef.current?.getInstance();
     const eventManager = editor.eventManager;
-    eventManager.addEventType('insertCitation');
+    try {
+      eventManager.addEventType('insertCitation');
+      eventManager.addEventType('insertBibliography');
+    } catch (error) {
+      // already loaded event
+    }
     eventManager.listen('insertCitation', function () {
-        console.log("insert citation called");
+        setShowCiteModal(true);
+        editor.insertText(`<sup>${insertedCitations.length + 1}</sup>`);
     });
-    eventManager.addEventType('insertBibliography');
     eventManager.listen('insertBibliography', function () {
-        console.log("insert bibliography called");
+        editor.moveCursorToEnd();
+        editor.insertText("\n```bibliography\n```");
+        editor.moveCursorToStart();
     });
   }, []);
   return (
@@ -53,39 +56,20 @@ const EditorExample = ({citations}) => {
       <Typography variant="body2">v1.1.0</Typography>
       <Divider className={classes.divider} />
 
-      <Typography variant="h5">Citations Given</Typography>
-
-      <TableContainer className={classes.table} component={Paper}>
-        <Table size="small">
-          <TableHead>
-            <TableRow className={classes.tableHeader}>
-              <TableCell>Author</TableCell>
-              <TableCell align="right">Year</TableCell>
-              <TableCell align="right">ID</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {citations.map((row) => (
-              <TableRow key={row.author}>
-                <TableCell component="th" scope="row">
-                  {row.author}
-                </TableCell>
-                <TableCell align="right">{row.year}</TableCell>
-                <TableCell align="right">{row.id}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Divider className={classes.divider} />
+      <CiteModal 
+        open={showCiteModal}
+        handleClose={() => setShowCiteModal(false)}
+        citations={citations}
+        insertedCitations={insertedCitations}
+        setInsertedCitations={setInsertedCitations}
+      />
 
       <Editor
           previewStyle="vertical"
           height="400px"
           initialEditType="markdown"
           initialValue=""
-          plugins={[tuiCitationPlugin]}
+          plugins={[() => tuiCitationPlugin({citations, insertedCitations})]}
           ref={editorRef}
           toolbarItems={[
             'heading',
@@ -128,6 +112,25 @@ const EditorExample = ({citations}) => {
         ]}
           usageStatistics={false}
         />
+        <Divider className={classes.divider} />
+        {
+          insertedCitations.length ?
+            <div>
+              <Typography variant="h6">Selected Citations (for Debugging)</Typography>
+              <ol>
+                {
+                  insertedCitations.map(id => {
+                    const result = citations.filter(citation => citation.id === id);
+                    if (!result) {return <></>;}
+                    return(
+                      <li> {result[0].author} - {result[0].year}
+                      </li>
+                    );
+                  })
+                }
+              </ol>
+            </div> : <></>
+        }
     </div>
   );
 };
