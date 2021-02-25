@@ -19,6 +19,10 @@ Use the 'C' button on the toolbar to open a citation insertion selection modal t
 
 Use the 'B' button on the toolbar to insert a bibliography automatically at the end of the document.
 
+## WIP Disclaimer
+
+The repository is meant to be a showcase and is not a final, finished product. Data is pre-filled to simulate real-world use cases and certain functionality is not completed.
+
 ## File Structure
 ### Primary Files
 - `src/EditorExample.js` - contains main React for example
