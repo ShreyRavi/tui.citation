@@ -13,6 +13,12 @@ To test, clone repo and run `npm install && npm start`.
 
 4. Navigate to `http://localhost:3000/` (usually)
 
+## Instructions
+
+Use the 'C' button on the toolbar to open a citation insertion selection modal to add a desired citation from list.
+
+Use the 'B' button on the toolbar to insert a bibliography automatically at the end of the document.
+
 ## File Structure
 ### Primary Files
 - `src/EditorExample.js` - contains main React for example
