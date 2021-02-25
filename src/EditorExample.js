@@ -104,7 +104,7 @@ const EditorExample = ({citations}) => {
                     event: 'insertCitation',
                     tooltip: 'Insert Citation',
                     text: 'C',
-                    style: 'color: black; border-color: black; background-color: white;'
+                    style: 'color: black; border-color: black; background: white;'
                 }
             },
             {
@@ -113,7 +113,7 @@ const EditorExample = ({citations}) => {
                   event: 'insertBibliography',
                   tooltip: 'Insert Bibliography',
                   text: 'B',
-                  style: 'color: black; border-color: black; background-color: white;'
+                  style: 'color: black; border-color: black; background: white;'
               }
           }
         ]}
