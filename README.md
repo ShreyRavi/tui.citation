@@ -1,7 +1,6 @@
 # [tui.citation](https://shreyravi.github.io/tui.citation/)
-A bibliography and citation custom plugin for Toast UI. Render citations and a bibliography in real-time! To test, clone repo and run `npm install && npm start`.
-A bibliography and citation custom plugin for Toast UI. Render citations and a bibliography in real-time!
-
+A bibliography and citation custom plugin for Toast UI. Render citations and a bibliography in real-time! 
+To test, clone repo and run `npm install && npm start`.
 <p align="center"><img src="https://github.com/ShreyRavi/tui.citation/raw/main/screenshot.png" height="93%" width="93%"></img>Screenshot of the demo of tui.citation Toast-UI Plugin.</p>
 
 ## How to Run
